@@ -27,14 +27,40 @@ repositories {
     maven { url 'https://repo.spring.io/milestone' }
 }
 
+
+sourceSets {
+    contractTest {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+configurations {
+    contractTestImplementation.extendsFrom implementation
+    contractTestRuntimeOnly.extendsFrom runtimeOnly
+}
+
+task contractTest(type: Test) {
+    description = 'Runs contract tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    shouldRunAfter test
+}
+
+check.dependsOn contractTest
+
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.codehaus.groovy:groovy-all:2.4.6'
-//    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-stub-runner'
+//    testImplementation 'org.codehaus.groovy:groovy-all:2.4.6'
 //    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
-    testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
+    contractTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    contractTestImplementation 'org.codehaus.groovy:groovy-all:2.4.6'
+    contractTestImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
 }
 
 dependencyManagement {
@@ -45,6 +71,6 @@ dependencyManagement {
 
 contracts {
     packageWithBaseClasses = 'com.example.contractdemo.contracts'
-    contractsDslDir = new File("${project.rootDir}/src/test/resources/contracts/")
-//    contractsDslDir = new File("${project.rootDir}/src/contractTest/resources/contracts/")
+    contractsDslDir = new File("${project.rootDir}/src/contractTest/resources/contracts/")
+//    sourceSets = 'contractTest' //What would be ideal to set to be able to run in different package
 }
