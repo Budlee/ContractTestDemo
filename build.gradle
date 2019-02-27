@@ -43,8 +43,17 @@ dependencyManagement {
     }
 }
 
+sourceSets {
+    test {
+        java {
+//            srcDirs = ['src/test/java','src/contractTest/java']
+            srcDirs = ['src/contractTest/java']
+        }
+    }
+}
+
 contracts {
     packageWithBaseClasses = 'com.example.contractdemo.contracts'
-    contractsDslDir = new File("${project.rootDir}/src/test/resources/contracts/")
+    contractsDslDir = new File("${project.rootDir}/src/contractTest/resources/contracts/")
 //    contractsDslDir = new File("${project.rootDir}/src/contractTest/resources/contracts/")
 }
