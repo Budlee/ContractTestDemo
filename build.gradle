@@ -1,7 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '2.1.2.RELEASE'
-        verifierVersion = '2.0.2.RELEASE'
+        verifierVersion = '2.1.0.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -47,7 +47,13 @@ sourceSets {
     test {
         java {
 //            srcDirs = ['src/test/java','src/contractTest/java']
-            srcDirs = ['src/contractTest/java']
+//            srcDirs.add(project.file('src/contractTest/java'))
+            srcDir 'src/test/java'
+            srcDir 'src/contractTest/java'
+        }
+        resources {
+            srcDir 'src/test/resources'
+            srcDir 'src/contractTest/resources'
         }
     }
 }
